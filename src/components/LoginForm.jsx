@@ -4,6 +4,7 @@ import { useLogin } from '@/services/mutation';
 import { setCookie } from '@/utils/cookie';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 
 const login = (token) => {
     setCookie('token', token)
@@ -21,7 +22,7 @@ const LoginForm = () => {
                 login(response.data?.token);
                 router.push("/");
             },
-            onError: (error) => console.log(error.response.data.message),
+            onError: (error) =>toast.error(error.response?.data?.message || "خطایی رخ داده است")
         });
     };
 
@@ -54,7 +55,7 @@ const LoginForm = () => {
                     </p>
                 </button>
 
-                <Link href={'/registration'} className='flex justify-start'>
+                <Link href={'/register'} className='flex justify-start'>
                     <p className='text-btnCreate body-normal'>ایجاد حساب کاربری!</p>
                 </Link>
             </div>

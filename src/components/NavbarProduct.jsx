@@ -1,17 +1,17 @@
-import React, { useState } from 'react'
+import React from 'react'
 import SearchIcon from './ui/icons/SearchIcon'
+import { debounce } from 'lodash';
 
 const NavbarProduct = ({ onSearch }) => {
-
-    const searchHandler = (event) => {
-        onSearch(event.target.value)
-    }
+    const searchHandler = debounce((event) => {
+        onSearch(event.target.value);
+    }, 300);
     return (
         <div className="flex items-center bg-white py-2 px-4 rounded-xl">
 
             <div className="grow flex gap-x-2">
                 <SearchIcon />
-                <input type="text"  onChange={searchHandler} placeholder="جستجو  کالا" className="w-full bg-white border-none outline-none text-matn" />
+                <input type="text" onChange={searchHandler} placeholder="جستجو  کالا" className="w-full bg-white border-none outline-none text-matn" />
             </div>
 
             <div className="divider divider-horizontal"></div>

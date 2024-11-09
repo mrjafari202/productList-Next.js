@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { useRegister } from "@/services/mutation";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 const RegistrForm = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -23,7 +24,8 @@ const RegistrForm = () => {
                     console.log(data.data.message);
                     navigate.push("/login");
                 },
-                onError: (error) => console.log(error.response.data.message),
+                onError: (error) => toast.error(error.response?.data?.message || "خطایی رخ داده است")
+
             }
         );
     };

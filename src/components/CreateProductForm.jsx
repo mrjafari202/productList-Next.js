@@ -2,6 +2,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useCreateProduct } from '../services/mutation'; 
+import {  toast } from 'react-toastify';
 
 export default function CreateProductForm({ setIsOpen }) {
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
@@ -14,10 +15,13 @@ export default function CreateProductForm({ setIsOpen }) {
             onSuccess: () => {
                 console.log('Product created successfully');
                 reset(); 
+                setIsOpen(false)
+
             },
             onError: (error) => {
-                console.error('Error creating product:', error);
-            },
+                toast.error(error.response?.data?.message || "خطایی رخ داده است");
+              }
+              
         });
         
     };
@@ -60,7 +64,6 @@ export default function CreateProductForm({ setIsOpen }) {
                     type="submit"
                     className="btn grow bg-btnCreate border-none"
                     disabled={isLoading} 
-                    onClick={() => setIsOpen(false)}
                 >
                     <p className="text-white body-normal">ایجاد</p>
                 </button>

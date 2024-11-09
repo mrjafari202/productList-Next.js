@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useUpdateProduct } from '../services/mutation';
+import { toast } from 'react-toastify';
 
 export default function EditeProductForm({ product, setIsOpen }) {
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
@@ -25,7 +26,7 @@ export default function EditeProductForm({ product, setIsOpen }) {
                 setIsOpen(false);
             },
             onError: (error) => {
-                console.error('Error updating product:', error);
+                toast.error(error.response?.data?.message || "خطایی رخ داده است");
             },
         });
     };

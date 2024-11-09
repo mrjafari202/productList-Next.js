@@ -2,12 +2,12 @@ import { Dialog, DialogPanel } from "@headlessui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import Close from "../assets/images/Close.png";
 import { useDeleteProduct } from "../services/mutation";
-import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
-export default function DeleteProductModal({ isOpen, setIsOpen, product }) {
+export default function DeleteProductModal({ isOpen, setIsOpen, product , onDeleteSuccess }) {
 
     const { mutate } = useDeleteProduct();
-    
+
     const deleteHandler = (id) => {
         const data = {
             ids: [id],
@@ -17,12 +17,13 @@ export default function DeleteProductModal({ isOpen, setIsOpen, product }) {
         mutate(
             { data },
             {
-                onSuccess: (data) => {
-                    console.log(data);
-                    setIsOpen(false)
+                onSuccess: () => {
+                    console.log("Product deleted successfully");
+                    setIsOpen(false);
+                    if (onDeleteSuccess) onDeleteSuccess(); // فراخوانی prop onDeleteSuccess پس از حذف موفقیت‌آمیز
                 },
                 onError: (error) => {
-                    console.log(error);
+                    toast.error(error.response?.data?.message || "خطایی رخ داده است");
                 },
             }
         );

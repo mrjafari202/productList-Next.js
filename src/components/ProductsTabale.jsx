@@ -5,20 +5,26 @@ import EditeProductModal from './EditeProductModal';
 import DeleteProductModal from './DeleteProductModal';
 import { useProducts } from '../services/queries';
 
-const ProductsTable = ({ page ,search }) => { 
+const ProductsTable = ({ page,setPage, search }) => { 
     const [isEditProductModalOpen, setIsEditProductModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
 
-    const { data, isLoading, error } = useProducts(page);
+    const { data, isLoading, error } = useProducts(page, search);
 
     if (isLoading) return <p>در حال بارگذاری...</p>;
     if (!data?.data) return <p>محصولی وجود ندارد</p>;
     if (error) return <p>خطا در دریافت داده‌ها</p>;
 
+    // فیلتر محصولات بر اساس `search` در صورتی که از حالت صفحه‌بندی مستقل باشد
     const filteredProducts = data?.data.data.filter(product =>
         product.name.toLowerCase().includes(search.toLowerCase())
     );
+    const handleDeleteSuccess = () => {
+        if (filteredProducts.length === 1 && page > 1) {
+            setPage(page - 1); // اگر آخرین محصول بود، به صفحه قبلی برود
+        }
+    };
 
     return (
         <div className="overflow-x-auto bg-white rounded-3xl">
@@ -27,7 +33,7 @@ const ProductsTable = ({ page ,search }) => {
                     <tr className='p-4 border-gray-300'>
                         <th className='body-medium text-matn p-5'>نام کالا</th>
                         <th className='body-medium text-matn p-5'>موجودی</th>
-                        <th className='body-medium text-matn p-5'>قیمت</th>
+                        <th className='body-medium text-matن p-5'>قیمت</th>
                         <th className='body-medium text-matn p-5'>شناسه کالا</th>
                         <th className='body-medium text-matn p-5'></th>
                     </tr>
@@ -48,11 +54,11 @@ const ProductsTable = ({ page ,search }) => {
                 </tbody>
             </table>
 
-            {/* مدال‌ها */}
+          
             <EditeProductModal isOpen={isEditProductModalOpen} setIsOpen={setIsEditProductModalOpen} product={selectedProduct} />
-            <DeleteProductModal isOpen={isDeleteModalOpen} setIsOpen={setIsDeleteModalOpen} product={selectedProduct} />
+            <DeleteProductModal isOpen={isDeleteModalOpen} setIsOpen={setIsDeleteModalOpen} product={selectedProduct} onDeleteSuccess={handleDeleteSuccess}/>
         </div>
     );
-}
+};
 
 export default ProductsTable;
